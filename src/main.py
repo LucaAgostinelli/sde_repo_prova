@@ -5,10 +5,10 @@ from http.server import HTTPServer
 
 from dotenv import dotenv_values  # pylint: disable=import-error
 
-from sde_repo_prova.src.controller.abstraction.i_controller import IController
-from sde_repo_prova.src.controller.json_controller import JsonController
-from sde_repo_prova.src.server.server import Server
-from sde_repo_prova.src.service.json_service import JsonService
+from src.controller.abstraction.i_controller import IController
+from src.controller.json_controller import JsonController
+from src.server.server import Server
+from src.service.json_service import JsonService
 
 
 def main():
@@ -26,7 +26,8 @@ def main():
     controller_dict: dict[str, IController] = {"json": json_controller}
 
     server_partial: partial[Server] = partial(
-        Server, endpoint_controllers=controller_dict)
+        Server, endpoint_controllers=controller_dict
+    )
 
     server = HTTPServer(("0.0.0.0", 5000), server_partial)
 

@@ -10,10 +10,10 @@ from http.server import HTTPServer
 
 import pytest  # pylint: disable=import-error
 
-from sde_repo_prova.src.controller.abstraction.i_controller import IController
-from sde_repo_prova.src.controller.json_controller import JsonController
-from sde_repo_prova.src.server.server import Server
-from sde_repo_prova.src.service.json_service import JsonService
+from src.controller.abstraction.i_controller import IController
+from src.controller.json_controller import JsonController
+from src.server.server import Server
+from src.service.json_service import JsonService
 
 # Server tests
 # pylint: disable=duplicate-code

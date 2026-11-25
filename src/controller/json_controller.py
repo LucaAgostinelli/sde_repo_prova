@@ -4,8 +4,8 @@ This module contains json_controller: it is responsible of routing /json endpoin
 
 from collections.abc import Callable
 
-from sde_repo_prova.src.controller.abstraction.i_controller import IController
-from sde_repo_prova.src.service.json_service import JsonService
+from src.controller.abstraction.i_controller import IController
+from src.service.json_service import JsonService
 
 
 class JsonController(IController):
@@ -22,13 +22,13 @@ class JsonController(IController):
         self.json_service = json_service
 
     def handle_request(self, endpoint: str) -> tuple[bool, bytes]:
-        '''
+        """
         Call the function that routes the specified request to the
         appropriate service and service method.
 
         Returns true and the encoded response if an handler for the specified endpoint was found,
         false otherwise
-        '''
+        """
 
         # Try to search the handler for the specified endpoint
         handler: Callable | None = self.endpoints_callable_dict.get(endpoint)
@@ -40,10 +40,10 @@ class JsonController(IController):
         return True, handler()
 
     def get_data(self) -> bytes:
-        '''
+        """
         Handles /json/getData: should return the bytes representing
         the encoded answer
-        '''
+        """
         data: str | None = self.json_service.read_json_file()
 
         if data is None:

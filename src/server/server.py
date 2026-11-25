@@ -9,7 +9,7 @@ from socket import socket
 from socketserver import BaseServer
 from typing import Any
 
-from sde_repo_prova.src.controller.abstraction.i_controller import IController
+from src.controller.abstraction.i_controller import IController
 
 
 class Server(BaseHTTPRequestHandler):
@@ -20,9 +20,13 @@ class Server(BaseHTTPRequestHandler):
 
     endpoint_controllers: dict[str, IController]
 
-    def __init__(self, request: socket, client_address: Any,
-                 server: BaseServer, endpoint_controllers: dict[str,
-                                                                IController]):
+    def __init__(
+        self,
+        request: socket,
+        client_address: Any,
+        server: BaseServer,
+        endpoint_controllers: dict[str, IController],
+    ):
         # Register controllers for specific routes
         self.endpoint_controllers = endpoint_controllers
 
@@ -31,23 +35,20 @@ class Server(BaseHTTPRequestHandler):
 
     def do_GET(self):  # pylint: disable=invalid-name
         """
-        Manages the GET requests. Only one endpoint is available: 
+        Manages the GET requests. Only one endpoint is available:
         /json, to get the current data included in the JSON file
         """
         base_endpoint: str = self.path.strip("/").split("/", 1)[0]
 
-        controller: IController | None = self.endpoint_controllers.get(
-            base_endpoint)
+        controller: IController | None = self.endpoint_controllers.get(base_endpoint)
 
         if controller is None:
             self.send_json({"error": "Endpoint not found"}, 404)
             return
 
-        specific_endpoint = self.path.strip("/").removeprefix(
-            base_endpoint).strip("/")
+        specific_endpoint = self.path.strip("/").removeprefix(base_endpoint).strip("/")
 
-        result: tuple[bool,
-                      bytes] = controller.handle_request(specific_endpoint)
+        result: tuple[bool, bytes] = controller.handle_request(specific_endpoint)
 
         if result[0] is False:
             # See IController for documentation
@@ -61,15 +62,15 @@ class Server(BaseHTTPRequestHandler):
         self.send_json({"data": result[1].decode()}, 200)
 
     def send_json(self, data: dict, status: int):
-        '''
+        """
         Helper function: send a JSON structured answer
-        '''
+        """
 
         response: bytes = json.dumps(data).encode("utf-8")
         header: dict = {
             "Content-Type": "application/json",
             "Content-Length": str(len(response)),
-            "Access-Control-Allow-Origin": "*"
+            "Access-Control-Allow-Origin": "*",
         }
 
         self.send_response(status)
